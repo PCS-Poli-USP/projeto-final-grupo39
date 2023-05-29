@@ -31,7 +31,23 @@ Inclua aqui uma rápida análise de projetos similares (comerciais ou não), con
 No mínimo deve ter um diagrama de blocos mostrando os elementos principais do projeto, todas as entradas e saídas planejadas.
 
 ## 5) Cronograma
-Você deve descrever exatamente o que pretende entregar nas duas entregas intermediárias, equivalentes às experiências 10 e 11. É necessário explicitar quais partes do projeto estarão em quais pontos de desenvolvimento e também como o professor deve verificar que você atingiu a meta.
 
-Observações: é possível usar o markdown aqui como documentação. Para a entrega no e-Disciplinas, você precisará gerar um PDF (há vários renderizadores que fazer isso). Se optar por isso, crie uma pasta relatório e deixe neste README os dados da seção 1.
+26/05 - Escrita do relatório
+27/05 - Elaboração da estrutura do jogo em VHDL
+27/05 - Construção da primeira versão da engine
+30/05 - Primeiro teste na placa FPGA, tanto do jogo quanto da beta do SPAV; discussão presencial com os professores e entrega do relatório de apresentação.
+02/06 - Ajustes e testes, a ideia é garantir o funcionamento perfeito do jogo até o final de semana
 
+Semana 10
+
+06/06 - Testes definitivos com os componentes do jogo em si e correções finais; teste com SPAV, imaginamos que não seja problemático, e sanar dúvidas sobre VGA com os professores.
+07/06 - Primeira tentativa de impletar a interface do programa em VGA
+09/06 - Testes com o que foi feito ou terminar o que não foi concluído
+
+Semana 11
+
+13/06 - Testes intermediários com VGA
+14/06 - Correções e aprimoramentos
+16/06 - Testes finais e refinamento
+19/06 - Verificação na véspera e correções de última hora (esperamos não haver nenhuma 😅)
+20/06 - Apresentação final
