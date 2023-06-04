@@ -6,15 +6,17 @@ ENTITY SPAV_v2 IS
 	PORT (
 		CLK_IN 		: IN std_logic; -- clock de entrada
 		Enable		: IN std_logic; -- Enable do SPAV
+		RESET			: IN std_logic;
 		Player_1 	: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 1
 		SPAV_IN 		: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas anteriores do SPAV
-		SPAV_OUT 	: OUT std_logic_vector(8 DOWNTO 0) --  saída da posição das jogadas do SPAV
+		SPAV_OUT_o 	: OUT std_logic_vector(8 DOWNTO 0) --  saída da posição das jogadas do SPAV
         );
 END SPAV_v2; -- fim da entidade
 
 ARCHITECTURE rtl OF SPAV_v2 IS -- arquitetura da UART_RX é: 
 
 	SIGNAL EN : std_logic;
+	SIGNAL SPAV_OUT : std_logic_vector(8 DOWNTO 0):= (OTHERS => '0');
 	
 	BEGIN
 	
@@ -115,6 +117,10 @@ ARCHITECTURE rtl OF SPAV_v2 IS -- arquitetura da UART_RX é:
 				END IF;
 			END IF;
 		END IF;
+		IF RESET = '1' THEN
+			SPAV_OUT <= "000000000";
+		END IF;
+		SPAV_OUT_o <= SPAV_OUT;
 	END IF;
 	END PROCESS;
 END ARCHITECTURE;
