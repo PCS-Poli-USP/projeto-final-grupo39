@@ -38,16 +38,17 @@ No mínimo deve ter um diagrama de blocos mostrando os elementos principais do p
 30/05 - Primeiro teste na placa FPGA, tanto do jogo quanto da beta do SPAV; discussão presencial com os professores e entrega do relatório de apresentação.
 02/06 - Ajustes e testes, a ideia é garantir o funcionamento perfeito do jogo até o final de semana
 
-Semana 10
+Semana 10 (Atualizado, em 06/06)
 
-06/06 - Testes definitivos com os componentes do jogo em si e correções finais; teste com SPAV, imaginamos que não seja problemático, e sanar dúvidas sobre VGA com os professores.
-07/06 - Primeira tentativa de impletar a interface do programa em VGA
-09/06 - Testes com o que foi feito ou terminar o que não foi concluído
+04/06 - Foram feitas correções parciais na engine do jogo e adiantou-se a pesquisa e os trabalhos em VGA. Mudamos a condição de vitória do jogo
+06/06 - Conseguimos implementar satisfatoriamente a versão base da interface do jogo, em termos dos símbolos "X" e "O" e do grid do tabuleiro, bem como houve correções pequenas no funcionamento da engine 
+07/06 - Pretenndemos concluir alguns dos problemas pendentes, como o reset global, reset da posição do jogo e um problema na máquina de estados. A prioridade, no entanto, é o funcionamento do SPAV.
+09/06 - Testes e algumas possíveis modificações
 
 Semana 11
 
-13/06 - Testes intermediários com VGA
-14/06 - Correções e aprimoramentos
-16/06 - Testes finais e refinamento
+13/06 - Implementação do SPAV e realização dos seus primeiros testes
+14/06 - Refinamento da interface do jogo, implementação parcial do placar e, talvez, dos dos outros elementos gráficos
+16/06 - Entrega definitiva da engine do jogo, testes finais e aprimoramento final da interface 
 19/06 - Verificação na véspera e correções de última hora (esperamos não haver nenhuma 😅)
 20/06 - Apresentação final
