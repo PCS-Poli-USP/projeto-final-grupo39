@@ -32,23 +32,23 @@ No mínimo deve ter um diagrama de blocos mostrando os elementos principais do p
 
 ## 5) Cronograma
 
-26/05 - Escrita do relatório
-27/05 - Elaboração da estrutura do jogo em VHDL
-27/05 - Construção da primeira versão da engine
-30/05 - Primeiro teste na placa FPGA, tanto do jogo quanto da beta do SPAV; discussão presencial com os professores e entrega do relatório de apresentação.
-02/06 - Ajustes e testes, a ideia é garantir o funcionamento perfeito do jogo até o final de semana
+26/05 - Escrita do relatório;
+27/05 - Elaboração da estrutura do jogo em VHDL;
+27/05 - Construção da primeira versão da engine;
+30/05 - Primeiro teste na placa FPGA, tanto do jogo quanto da beta do SPAV; discussão presencial com os professores e entrega do relatório de apresentação;
+02/06 - Ajustes e testes, a ideia é garantir o funcionamento perfeito do jogo até o final de semana;
 
 Semana 10 (Atualizado, em 06/06)
 
-04/06 - Foram feitas correções parciais na engine do jogo e adiantou-se a pesquisa e os trabalhos em VGA. Mudamos a condição de vitória do jogo
-06/06 - Conseguimos implementar satisfatoriamente a versão base da interface do jogo, em termos dos símbolos "X" e "O" e do grid do tabuleiro, bem como houve correções pequenas no funcionamento da engine 
-07/06 - Pretenndemos concluir alguns dos problemas pendentes, como o reset global, reset da posição do jogo e um problema na máquina de estados. A prioridade, no entanto, é o funcionamento do SPAV.
-09/06 - Testes e algumas possíveis modificações
+04/06 - Foram feitas correções parciais na engine do jogo e adiantou-se a pesquisa e os trabalhos em VGA. Mudamos a condição de vitória do jogo;
+06/06 - Conseguimos implementar satisfatoriamente a versão base da interface do jogo, em termos dos símbolos "X" e "O" e do grid do tabuleiro, bem como houve correções pequenas no funcionamento da engine;
+07/06 - Pretenndemos concluir alguns dos problemas pendentes, como o reset global, reset da posição do jogo e um problema na máquina de estados. A prioridade, no entanto, é o funcionamento do SPAV;
+09/06 - Testes e algumas possíveis modificações;
 
 Semana 11
 
-13/06 - Implementação do SPAV e realização dos seus primeiros testes
-14/06 - Refinamento da interface do jogo, implementação parcial do placar e, talvez, dos dos outros elementos gráficos
-16/06 - Entrega definitiva da engine do jogo, testes finais e aprimoramento final da interface 
-19/06 - Verificação na véspera e correções de última hora (esperamos não haver nenhuma 😅)
-20/06 - Apresentação final
+13/06 - Implementação do SPAV e realização dos seus primeiros testes;
+14/06 - Refinamento da interface do jogo, implementação parcial do placar e, talvez, dos dos outros elementos gráficos;
+16/06 - Entrega definitiva da engine do jogo, testes finais e aprimoramento final da interface;
+19/06 - Verificação na véspera e correções de última hora (esperamos não haver nenhuma 😅);
+20/06 - Apresentação final;
