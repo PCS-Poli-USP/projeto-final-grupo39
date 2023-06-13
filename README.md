@@ -48,17 +48,19 @@ Semana 10 (Atualizado, em 06/06)
 
 06/06 - Conseguimos implementar satisfatoriamente a versão base da interface do jogo, em termos dos símbolos "X" e "O" e do grid do tabuleiro, bem como houve correções pequenas no funcionamento da engine;
 
-07/06 - Pretenndemos concluir alguns dos problemas pendentes, como o reset global, reset da posição do jogo e um problema na máquina de estados. A prioridade, no entanto, é o funcionamento do SPAV;
+07/06 - Pretendemos concluir alguns dos problemas pendentes, como o reset global, reset da posição do jogo e um problema na máquina de estados. A prioridade, no entanto, é o funcionamento do SPAV;
 
 09/06 - Testes e algumas possíveis modificações;
 
 Semana 11
 
-13/06 - Implementação do SPAV e realização dos seus primeiros testes;
+13/06 - Implementação do SPAV e realização dos seus primeiros testes, bem como a implementação parcial do placar. Além disso, conseguimos resolver o problema do reset local que estava pendente;
 
-14/06 - Refinamento da interface do jogo, implementação parcial do placar e, talvez, dos dos outros elementos gráficos;
+14/06 - Refinamento da interface do jogo e, talvez, dos outros elementos gráficos;
 
 16/06 - Entrega definitiva da engine do jogo, testes finais e aprimoramento final da interface;
+
+Semana 12
 
 19/06 - Verificação na véspera e correções de última hora (esperamos não haver nenhuma 😅);
 
