@@ -3,6 +3,18 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 USE IEEE.STD_LOGIC_ARITH.ALL;
 USE WORK.X_PACKAGE.ALL;
+USE WORK.O_PACKAGE.ALL;
+USE WORK.N0_PACKAGE.ALL;
+USE WORK.N1_PACKAGE.ALL;
+USE WORK.N2_PACKAGE.ALL;
+USE WORK.N3_PACKAGE.ALL;
+USE WORK.N4_PACKAGE.ALL;
+USE WORK.N5_PACKAGE.ALL;
+USE WORK.N6_PACKAGE.ALL;
+USE WORK.N7_PACKAGE.ALL;
+USE WORK.N8_PACKAGE.ALL;
+USE WORK.N9_PACKAGE.ALL;
+USE WORK.NLINHA_PACKAGE.ALL;
 
 ENTITY CONTROLADOR_VGA IS
 	PORT(
@@ -12,7 +24,14 @@ ENTITY CONTROLADOR_VGA IS
 		VSYNC 	: OUT std_logic; --Sync Vertical
 		R			: OUT std_logic_vector(3 downto 0); --bits de R (1111 = max)
 		G			: OUT std_logic_vector(3 downto 0); --bits de G (1111 = max)
-		B	   	 : OUT std_logic_vector(3 downto 0) --bits de B (1111 = max)
+		B	   	: OUT std_logic_vector(3 downto 0); --bits de B (1111 = max)
+		Player_1_IN		: IN std_logic_vector(8 DOWNTO 0); 
+		Player_2_IN		: IN std_logic_vector(8 DOWNTO 0); 
+		Player_1_Pre	: IN std_logic_vector(8 DOWNTO 0); 
+		Player_2_Pre	: IN std_logic_vector(8 DOWNTO 0);
+		Placar1_IN 	: IN	std_logic_vector(9 DOWNTO 0);
+		Placar2_IN 	: IN	std_logic_vector(9 DOWNTO 0);
+		LINHA_IN			: IN integer RANGE 0 TO 350
 	);
 END ENTITY CONTROLADOR_VGA;
 
@@ -55,7 +74,7 @@ SIGNAL clk25M : std_logic := '0'; -- Clock para a resolução 640 x 480 (caso ne
 --====================================================--
 						   -- HORIZONTAL --
 
-CONSTANT HD :  integer := 639; --Resolução Horizontal
+CONSTANT HD :  integer := 640; --Resolução Horizontal
 
 CONSTANT HFP : integer := 16;  --Front Porch Horizontal
 
@@ -66,7 +85,7 @@ CONSTANT HSP : integer := 96;  --Sync Pulse Horizontal
 --====================================================--
 							 -- VERTICAL --
 							 
-CONSTANT VD :  integer := 479; --Resolução Vertical
+CONSTANT VD :  integer := 480; --Resolução Vertical
 
 CONSTANT VFP : integer := 10;  --Front Porch Vertical
 
@@ -82,8 +101,94 @@ SIGNAL VtPos : integer := 0; --Posição Vertical
 
 SIGNAL videoEN : std_logic :='0';
 
+SIGNAL DRAW0_XP,DRAW1_XP,DRAW2_XP,DRAW3_XP,DRAW4_XP,DRAW5_XP,DRAW6_XP,DRAW7_XP,DRAW8_XP:STD_LOGIC:='0';
+SIGNAL DRAW0_OP,DRAW1_OP,DRAW2_OP,DRAW3_OP,DRAW4_OP,DRAW5_OP,DRAW6_OP,DRAW7_OP,DRAW8_OP:STD_LOGIC:='0';
+SIGNAL DRAW0_X,DRAW1_X,DRAW2_X,DRAW3_X,DRAW4_X,DRAW5_X,DRAW6_X,DRAW7_X,DRAW8_X:STD_LOGIC:='0';
+SIGNAL DRAW0_O,DRAW1_O,DRAW2_O,DRAW3_O,DRAW4_O,DRAW5_O,DRAW6_O,DRAW7_O,DRAW8_O:STD_LOGIC:='0';
+SIGNAL DRAW0_P1,DRAW1_P1,DRAW2_P1,DRAW3_P1,DRAW4_P1,DRAW5_P1,DRAW6_P1,DRAW7_P1,DRAW8_P1,DRAW9_P1:STD_LOGIC:='0';
+SIGNAL DRAW0_P2,DRAW1_P2,DRAW2_P2,DRAW3_P2,DRAW4_P2,DRAW5_P2,DRAW6_P2,DRAW7_P2,DRAW8_P2,DRAW9_P2:STD_LOGIC:='0';
+SIGNAL DRAW0_L, DRAW1_L:STD_LOGIC:='0';
+SIGNAL HPOS1: INTEGER RANGE 0 TO 640:=195;
+SIGNAL VPOS1: INTEGER RANGE 0 TO 480:=115;
+SIGNAL HPOS2: INTEGER RANGE 0 TO 640:=295;
+SIGNAL VPOS2: INTEGER RANGE 0 TO 480:=215;
+SIGNAL HPOS3: INTEGER RANGE 0 TO 640:=395;
+SIGNAL VPOS3: INTEGER RANGE 0 TO 480:=315;
+SIGNAL HPLACAR1: INTEGER RANGE 0 TO 640:=64;
+SIGNAL VPLACAR1: INTEGER RANGE 0 TO 480:=50;
+SIGNAL HPLACAR2: INTEGER RANGE 0 TO 640:=560;
+SIGNAL VPLACAR2: INTEGER RANGE 0 TO 480:=50;
+SIGNAL EN_DRAW_X_temp : STD_LOGIC := '1';
+SIGNAL R_aux, G_aux, B_aux : std_logic_vector(3 DOWNTO 0);
+SIGNAL LINHA : INTEGER RANGE 0 TO 350:=0;
+
 BEGIN	
-	
+Linha <= LINHA_IN;
+
+DX(Player_1_Pre(0),HPOS1,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_XP);
+DX(Player_1_Pre(1),HPOS2,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_XP);
+DX(Player_1_Pre(2),HPOS3,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_XP);
+DX(Player_1_Pre(3),HPOS1,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_XP);
+DX(Player_1_Pre(4),HPOS2,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_XP);
+DX(Player_1_Pre(5),HPOS3,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_XP);
+DX(Player_1_Pre(6),HPOS1,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_XP);
+DX(Player_1_Pre(7),HPOS2,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_XP);
+DX(Player_1_Pre(8),HPOS3,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_XP);
+
+DO(Player_2_Pre(0),HPOS1,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_OP);
+DO(Player_2_Pre(1),HPOS2,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_OP);
+DO(Player_2_Pre(2),HPOS3,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_OP);
+DO(Player_2_Pre(3),HPOS1,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_OP);
+DO(Player_2_Pre(4),HPOS2,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_OP);
+DO(Player_2_Pre(5),HPOS3,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_OP);
+DO(Player_2_Pre(6),HPOS1,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_OP);
+DO(Player_2_Pre(7),HPOS2,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_OP);
+DO(Player_2_Pre(8),HPOS3,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_OP);
+
+DX(Player_1_IN(0),HPOS1,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_X);
+DX(Player_1_IN(1),HPOS2,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_X);
+DX(Player_1_IN(2),HPOS3,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_X);
+DX(Player_1_IN(3),HPOS1,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_X);
+DX(Player_1_IN(4),HPOS2,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_X);
+DX(Player_1_IN(5),HPOS3,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_X);
+DX(Player_1_IN(6),HPOS1,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_X);
+DX(Player_1_IN(7),HPOS2,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_X);
+DX(Player_1_IN(8),HPOS3,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_X);
+
+DO(Player_2_IN(0),HPOS1,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_O);
+DO(Player_2_IN(1),HPOS2,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_O);
+DO(Player_2_IN(2),HPOS3,VPOS1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_O);
+DO(Player_2_IN(3),HPOS1,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_O);
+DO(Player_2_IN(4),HPOS2,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_O);
+DO(Player_2_IN(5),HPOS3,VPOS2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_O);
+DO(Player_2_IN(6),HPOS1,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_O);
+DO(Player_2_IN(7),HPOS2,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_O);
+DO(Player_2_IN(8),HPOS3,VPOS3,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_O);
+
+N0(Placar1_IN(0),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_P1);
+N1(Placar1_IN(1),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_P1);
+N2(Placar1_IN(2),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_P1);
+N3(Placar1_IN(3),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_P1);
+N4(Placar1_IN(4),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_P1);
+N5(Placar1_IN(5),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_P1);
+N6(Placar1_IN(6),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_P1);
+N7(Placar1_IN(7),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_P1);
+N8(Placar1_IN(8),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_P1);
+N9(Placar1_IN(9),HPLACAR1,VPLACAR1,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW9_P1);
+
+N0(Placar2_IN(0),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_P2);
+N1(Placar2_IN(1),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_P2);
+N2(Placar2_IN(2),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW2_P2);
+N3(Placar2_IN(3),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW3_P2);
+N4(Placar2_IN(4),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW4_P2);
+N5(Placar2_IN(5),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW5_P2);
+N6(Placar2_IN(6),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW6_P2);
+N7(Placar2_IN(7),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW7_P2);
+N8(Placar2_IN(8),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW8_P2);
+N9(Placar2_IN(9),HPLACAR2,VPLACAR2,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW9_P2);
+
+NLINHA(LINHA,Player_1_IN,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW0_L);
+NLINHA(LINHA,Player_2_IN,HzPos,VtPos,R_aux,G_aux,B_aux,DRAW1_L);
 		
 Clock_Div : PROCESS(CLK) -- Clock para a resolução 640 x 480 (caso necessária)
 BEGIN
@@ -159,7 +264,7 @@ BEGIN
 	END IF;
 END PROCESS;
 
-Desenho:PROCESS(clk25M, HzPos, VtPos, videoEN)
+Desenho:PROCESS(clk25M, HzPos, VtPos, videoEN, RST, Linha)
 BEGIN
 	IF(RST = '1')THEN
 		R <= "0000";
@@ -167,7 +272,40 @@ BEGIN
 		B  <= "0000";
 	ELSIF rising_edge(clk25M) THEN
 		IF(videoEN = '1')THEN
-			IF(((HzPos >= 315 AND HzPos <= 325) OR (VtPos >= 235 AND VtPos <= 245)) OR (((HzPos >= 0 AND HzPos <= 10) OR (HzPos >= 630 AND HzPos <= 640) OR (VtPos >= 0 AND VtPos <= 10) OR (VtPos >= 470 AND VtPos <= 480))))THEN
+			IF(DRAW0_L = '1' OR DRAW1_L = '1') THEN
+				R <= "1111";
+				G  <= "0011";
+				B  <= "1111";
+			ELSIF(DRAW0_XP = '1' OR DRAW1_XP = '1' OR DRAW2_XP = '1' OR DRAW3_XP = '1' OR DRAW4_XP = '1' OR DRAW5_XP = '1' OR DRAW6_XP = '1' OR DRAW7_XP = '1' OR DRAW8_XP = '1') THEN
+				R <= "1111";
+				G  <= "0011";
+				B  <= "1111";
+			ELSIF(DRAW0_OP = '1' OR DRAW1_OP = '1' OR DRAW2_OP = '1' OR DRAW3_OP = '1' OR DRAW4_OP = '1' OR DRAW5_OP = '1' OR DRAW6_OP = '1' OR DRAW7_OP = '1' OR DRAW8_OP = '1') THEN
+				R <= "0011";
+				G  <= "1111";
+				B  <= "1111";
+			ELSIF(DRAW0_X = '1' OR DRAW1_X = '1' OR DRAW2_X = '1' OR DRAW3_X = '1' OR DRAW4_X = '1' OR DRAW5_X = '1' OR DRAW6_X = '1' OR DRAW7_X = '1' OR DRAW8_X = '1') THEN
+				R <= "1111";
+				G  <= "0000";
+				B  <= "0000";
+			ELSIF(DRAW0_O = '1' OR DRAW1_O = '1' OR DRAW2_O = '1' OR DRAW3_O = '1' OR DRAW4_O = '1' OR DRAW5_O = '1' OR DRAW6_O = '1' OR DRAW7_O = '1' OR DRAW8_O = '1') THEN
+				R <= "0000";
+				G  <= "0000";
+				B  <= "1111";
+			ELSIF(DRAW0_P1 = '1' OR DRAW1_P1 = '1' OR DRAW2_P1 = '1' OR DRAW3_P1 = '1' OR DRAW4_P1 = '1' OR DRAW5_P1 = '1' OR DRAW6_P1 = '1' OR DRAW7_P1 = '1' OR DRAW8_P1 = '1' OR DRAW9_P1 = '1') THEN
+				R <= "1111";
+				G  <= "0000";
+				B  <= "0000";
+			ELSIF(DRAW0_P2 = '1' OR DRAW1_P2 = '1' OR DRAW2_P2 = '1' OR DRAW3_P2 = '1' OR DRAW4_P2 = '1' OR DRAW5_P2 = '1' OR DRAW6_P2 = '1' OR DRAW7_P2 = '1' OR DRAW8_P2 = '1' OR DRAW9_P2 = '1') THEN
+				R <= "0000";
+				G  <= "0000";
+				B  <= "1111";
+			--ELSIF(((HzPos >= 318 AND HzPos <= 322) OR (VtPos >= 238 AND VtPos <= 242)) OR (((HzPos >= 0 AND HzPos <= 4) OR (HzPos >= 636 AND HzPos <= 640) OR (VtPos >= 0 AND VtPos <= 4) OR (VtPos >= 476 AND VtPos <= 480)))) THEN
+			--ELSIF (((HzPos >= 0 AND HzPos <= 4) OR (HzPos >= 636 AND HzPos <= 640) OR (VtPos >= 0 AND VtPos <= 4) OR (VtPos >= 476 AND VtPos <= 480))) THEN
+			--	R <= "0000";
+			--	G  <= "1111";
+			--	B  <= "0000";
+			ELSIF ((VtPos >= 90 AND VtPos <= 390) AND (HzPos >= 170 AND HzPos <= 470)) AND (((VtPos >= 189 AND VtPos <= 191) OR (VtPos >= 289 AND VtPos <= 291) OR (HzPos >= 269 AND HzPos <= 271)) OR (HzPos >= 369 AND HzPos <= 371)) THEN
 				R <= "1111";
 				G  <= "1111";
 				B  <= "1111";

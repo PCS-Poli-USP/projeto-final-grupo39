@@ -15,16 +15,19 @@ END SPAV_v2; -- fim da entidade
 
 ARCHITECTURE rtl OF SPAV_v2 IS -- arquitetura da UART_RX é: 
 
-	SIGNAL EN : std_logic;
+	SIGNAL EN : std_logic:= '0';
 	SIGNAL SPAV_OUT : std_logic_vector(8 DOWNTO 0):= (OTHERS => '0');
 	
 	BEGIN
 	
-	EN <= Enable AND CLK_IN;
+	EN <= Enable;
 	
-	PROCESS (Enable)
+	PROCESS (EN, RESET)
 	BEGIN
-	IF rising_edge(Enable) THEN
+	IF RESET = '1' THEN
+		SPAV_OUT <= "000000000";
+		SPAV_OUT_o <= SPAV_OUT;
+	ELSIF rising_edge(EN) THEN
 		--===========--
 		--FINALIZAÇÃO--
 		--===========--
@@ -110,15 +113,24 @@ ARCHITECTURE rtl OF SPAV_v2 IS -- arquitetura da UART_RX é:
 								SPAV_OUT(6)<='1';
 							ELSIF ( SPAV_IN(8)='0' AND Player_1(8)='0') THEN
 								SPAV_OUT(8)<='1';
-
+							ELSE
+								--=============--
+								--  DEU VELHA  --
+								--=============--
+								IF ( SPAV_IN(1)='0' AND Player_1(1)='0') THEN
+									SPAV_OUT(1)<='1';
+								ELSIF ( SPAV_IN(3)='0' AND Player_1(3)='0') THEN
+									SPAV_OUT(3)<='1';
+								ELSIF ( SPAV_IN(5)='0' AND Player_1(5)='0') THEN
+									SPAV_OUT(5)<='1';
+								ELSIF ( SPAV_IN(7)='0' AND Player_1(7)='0') THEN
+									SPAV_OUT(7)<='1';
+								END IF;
 							END IF;
 						END IF;
 					END IF;
 				END IF;
 			END IF;
-		END IF;
-		IF RESET = '1' THEN
-			SPAV_OUT <= "000000000";
 		END IF;
 		SPAV_OUT_o <= SPAV_OUT;
 	END IF;

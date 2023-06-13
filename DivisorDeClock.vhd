@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 entity DivisorDeClock is
     generic(
 	    freq_clock_in : integer := 50_000_000;
-		 freq_clock_out : integer := 6_154
+		 freq_clock_out : integer := 256
 		 );
 	 port(
 	    clock_in: in std_logic;
