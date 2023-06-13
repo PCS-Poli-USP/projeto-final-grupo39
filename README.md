@@ -54,7 +54,7 @@ Semana 10 (Atualizado, em 06/06)
 
 Semana 11
 
-13/06 - Implementação do SPAV e realização dos seus primeiros testes, bem como a implementação parcial do placar. Além disso, conseguimos resolver o problema do reset local que estava pendente;
+13/06 - Implementação do SPAV e realização dos seus primeiros testes. Além disso, houve a implementação parcial do placar e conseguimos resolver o problema do reset local que estava pendente. Contudo, é preciso resolver um problema continuidade do jogo;
 
 14/06 - Refinamento da interface do jogo e, talvez, dos outros elementos gráficos;
 
