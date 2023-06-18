@@ -1,12 +1,7 @@
-
----------------------------------------------------------------------------
--- Um pequeno resumo, até o momento temos armazenado em um vetor de 24 posições os bits equivalentes das nossas 3 letras, precisamos pegar 8 bits por vez, traduzi-los e mostrarmos em três displays 7 segmentos
--- além disso até o momento descrevemos o funcionamento do projeto internamente, precisamos criar uma interface que seja apropriada para receber as informações do FPGA
 	
 	LIBRARY ieee;
 	USE ieee.std_logic_1164.ALL;
-	
--- Essa é a entidade responsável, nela serão conectados o pino de dados vindo do receptor, o clock interno, e os 3 displays que mostrarão as nossas letras
+
 	ENTITY Teste IS
 		PORT (
 		clock_i 					 		: IN std_logic;
@@ -26,15 +21,14 @@
 		);
 	END ENTITY Teste;
 
--- Aqui serão definidos alguns sinais que podem ser interpretados como fios que vão conectar a nossa UART
 
 	ARCHITECTURE RTL OF Teste IS
 
-		SIGNAL SPAV_CONTROL, XO_CONTROL, clock_i_aux, RESET 									   		: std_logic; -- sinal que representa o validador  de bit
+		SIGNAL SPAV_CONTROL, XO_CONTROL, clock_i_aux, RESET, XO_aux, Preview_EN, TELA_WINX_aux, TELA_WINO_aux	: std_logic; -- sinal que representa o validador  de bit
 		SIGNAL Player1_CTRL, Player2_CTRL, SPAV_CTRL								   			: std_logic_vector(8 DOWNTO 0); -- sinal que representa o byte com uma palavra armazenada
 		SIGNAL Player1_DISPLAY, Player2_DISPLAY	 : std_logic_vector(8 DOWNTO 0); -- sinais que vão conectar partes das palavras que adquirimos na máquina de estados a entidade que converte para o display 7 segmentos
 		SIGNAL Player_1, Player_2, Tabuleiro_aux						: std_logic_vector(8 DOWNTO 0);
-		SIGNAL Player_1_Preview, Player_2_Preview						: std_logic_vector(8 DOWNTO 0);
+		SIGNAL Player_1_Preview, Player_2_Preview, Player_1_Preview_aux, Player_2_Preview_aux	: std_logic_vector(8 DOWNTO 0);
 		SIGNAL STATE_aux															: std_logic_vector(7 DOWNTO 0);
 		SIGNAL Placar1, Placar2 	: std_logic_vector(9 DOWNTO 0);
 		SIGNAL LINHA_aux : INTEGER RANGE 0 TO 350:=0;
@@ -54,6 +48,8 @@
 				Player_2_Pre	: IN std_logic_vector(8 DOWNTO 0);
 				Placar1_IN 		: IN	std_logic_vector(9 DOWNTO 0);
 				Placar2_IN 		: IN	std_logic_vector(9 DOWNTO 0);
+				TELA_WINX_IN	: IN std_logic;
+				TELA_WINO_IN	: IN std_logic;
 				LINHA_IN			: IN integer RANGE 0 TO 350
 				);
 		END COMPONENT;
@@ -106,6 +102,10 @@
 		Placar2_OUT 	: OUT	std_logic_vector(9 DOWNTO 0);
 		LINHA_OUT		: OUT integer RANGE 0 TO 350;
 		RESET_OUT		: OUT std_logic;
+		XO					: OUT std_logic;
+		Preview_EN		: OUT std_logic;
+		TELA_WINX_OUT	: OUT std_logic;
+		TELA_WINO_OUT	: OUT std_logic;
 		SPAV_OUT			: OUT std_logic -- Enable do SPAV
         );
 		END COMPONENT;
@@ -119,6 +119,7 @@
 				BOT_MOVE			: IN std_logic;
 				BOT_CONFIRM		: IN std_logic;
 				SPAV_CTRL_IN 	: IN std_logic;
+				XO_IN				: IN std_logic;
 				Player_1_IN		: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 1
 				Player_2_IN		: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 2
 				Player_1_Pre	: OUT std_logic_vector(8 DOWNTO 0); -- saida da posição das jogadas do Player 1
@@ -153,6 +154,14 @@
 			Player_2 	WHEN 		'1', -- PvP
 			SPAV_CTRL 	WHEN OTHERS;  -- PvE
 			
+		WITH Preview_EN SELECT Player_1_Preview_aux <=
+			Player_1_Preview 	WHEN 		'1',
+			"000000000" 	WHEN OTHERS;
+		
+		WITH Preview_EN SELECT Player_2_Preview_aux <=
+			Player_2_Preview 	WHEN 		'1',
+			"000000000" 	WHEN OTHERS;
+			
 		CLOCK_1 : DivisorDeClock
 		PORT MAP(clock_i, clock_i_aux);
 		
@@ -160,10 +169,10 @@
 		PORT MAP(clock_i_aux, SPAV_CONTROL, RESET, Player1_DISPLAY, Player2_DISPLAY, SPAV_CTRL);
 		
 		ENGINE_1 : ENGINE
-		PORT MAP(clock_i_aux, PLAY, GAME_MODE_IN, "0000000100", Player1_CTRL, Player2_CTRL, Player1_DISPLAY, Player2_DISPLAY, STATE_aux, Placar1, Placar2, LINHA_aux, RESET, SPAV_CONTROL);
+		PORT MAP(clock_i_aux, PLAY, GAME_MODE_IN, "0000000100", Player1_CTRL, Player2_CTRL, Player1_DISPLAY, Player2_DISPLAY, STATE_aux, Placar1, Placar2, LINHA_aux, RESET, XO_aux, Preview_EN, TELA_WINX_aux, TELA_WINO_aux, SPAV_CONTROL);
 		
 		CONTROLE_1 : CONTROLE
-		PORT MAP(clock_i_aux, RESET, Bot_2, Bot_1, GAME_MODE_IN, Player1_DISPLAY, Player2_DISPLAY, Player_1_Preview, Player_2_Preview, Player_1, Player_2, XO_CONTROL);
+		PORT MAP(clock_i_aux, RESET, Bot_2, Bot_1, GAME_MODE_IN, XO_aux, Player1_DISPLAY, Player2_DISPLAY, Player_1_Preview, Player_2_Preview, Player_1, Player_2, XO_CONTROL);
 		
 		--TABULEIRO_1 : TABULEIRO
 		--PORT MAP(Player1_DISPLAY, Player2_DISPLAY, Tabuleiro_aux);
@@ -180,6 +189,6 @@
 
 
 		VGA : CONTROLADOR_VGA
-		PORT MAP(clock_i, '0', HSYNC, VSYNC, R, G, B, Player1_DISPLAY, Player2_DISPLAY, Player_1_Preview, Player_2_Preview, Placar1, Placar2, LINHA_aux);
+		PORT MAP(clock_i, '0', HSYNC, VSYNC, R, G, B, Player1_DISPLAY, Player2_DISPLAY, Player_1_Preview_aux, Player_2_Preview_aux, Placar1, Placar2, TELA_WINX_aux, TELA_WINO_aux, LINHA_aux);
 
 	END architecture;

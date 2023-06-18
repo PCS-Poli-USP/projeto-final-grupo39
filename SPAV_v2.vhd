@@ -93,13 +93,13 @@ ARCHITECTURE rtl OF SPAV_v2 IS -- arquitetura da UART_RX é:
 						--=============--
 						--DEFESA QUINAS--
 						--=============--
-						IF ( SPAV_IN(0)='0' AND Player_1(0)='0' AND Player_1(8)='1') THEN
+						IF ( SPAV_IN(0)='0' AND Player_1(0)='0' AND Player_1(8)='0') THEN
 							SPAV_OUT(0)<='1';
-						ELSIF ( SPAV_IN(2)='0' AND Player_1(2)='0' AND Player_1(6)='1') THEN
+						ELSIF ( SPAV_IN(2)='0' AND Player_1(2)='0' AND Player_1(6)='0') THEN
 							SPAV_OUT(2)<='1';
-						ELSIF ( SPAV_IN(6)='0' AND Player_1(6)='0' AND Player_1(2)='1') THEN
+						ELSIF ( SPAV_IN(6)='0' AND Player_1(6)='0' AND Player_1(2)='0') THEN
 							SPAV_OUT(6)<='1';
-						ELSIF ( SPAV_IN(8)='0' AND Player_1(8)='0' AND Player_1(0)='1') THEN
+						ELSIF ( SPAV_IN(8)='0' AND Player_1(8)='0' AND Player_1(0)='0') THEN
 							SPAV_OUT(8)<='1';
 						ELSE
 							--=============--

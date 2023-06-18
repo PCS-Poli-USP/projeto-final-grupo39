@@ -17,13 +17,17 @@ ENTITY ENGINE IS
 		Placar2_OUT 	: OUT	std_logic_vector(9 DOWNTO 0);
 		LINHA_OUT		: OUT integer RANGE 0 TO 350;
 		RESET_OUT		: OUT std_logic;
+		XO					: OUT std_logic;
+		Preview_EN		: OUT std_logic;
+		TELA_WINX_OUT	: OUT std_logic;
+		TELA_WINO_OUT	: OUT std_logic;
 		SPAV_OUT			: OUT std_logic -- Enable do SPAV
         );
 END ENGINE; -- fim da entidade
 
 ARCHITECTURE rtl OF ENGINE IS
 
-	TYPE ESTADO IS (IDLE, GAME_MODE, PLAYER1, PLAYER2, SPAV, WIN, LINHA); 
+	TYPE ESTADO IS (IDLE, GAME_MODE, PLAYER1, PLAYER2, SPAV, WIN, WINX, WINO, TELA_WINX, TELA_WINO, LINHA); 
 	
 	SIGNAL SM_ENGINE : ESTADO := IDLE; -- estado inativo/inicial da máquina de estados
 	SIGNAL GAME_MODE_AUX: std_logic;
@@ -33,7 +37,7 @@ ARCHITECTURE rtl OF ENGINE IS
 	SIGNAL EN : std_logic;
 	SIGNAL Jogada_Player1, Jogada_Player2, Player1_rst, Player2_rst	: std_logic;
 	SIGNAL WIN1, WIN2, EMPATE, RESET : std_logic;
-	SIGNAL LINHA_aux : INTEGER RANGE 0 TO 350:=0;
+	SIGNAL LINHA_aux : INTEGER RANGE 0 TO 700:=0;
 	
 	COMPONENT WIN_TESTER IS 
 	PORT (
@@ -102,6 +106,9 @@ ARCHITECTURE rtl OF ENGINE IS
 					STATE <= "01000111";
 					Player1_aux <= Player_1;
 					Player2_aux <= Player_2;
+					Preview_EN <= '1';
+					TELA_WINX_OUT <= '0';
+					TELA_WINO_OUT <= '0';
 					IF Player1_rst = '0' AND Player2_rst = '0' THEN
 					RESET <= '0';
 					STATE <= "01010111";
@@ -126,6 +133,7 @@ ARCHITECTURE rtl OF ENGINE IS
 					END IF;
 					
 				WHEN PLAYER1 =>
+				XO <= '1';
 				RESET <= '0';
 				Player_1_OUT <= Player1_aux;
 				Player_2_OUT <= Player2_aux;
@@ -140,6 +148,7 @@ ARCHITECTURE rtl OF ENGINE IS
 					END IF;
 				
 				WHEN PLAYER2 =>
+				XO <= '0';
 				RESET <= '0';
 				Player_1_OUT <= Player1_aux;
 				Player_2_OUT <= Player2_aux;
@@ -154,6 +163,7 @@ ARCHITECTURE rtl OF ENGINE IS
 					END IF;
 					
 				WHEN SPAV =>
+				XO <= '0';
 				STATE <= "01010011";
 				RESET <= '0';
 					IF Jogada_Player2 = '1' THEN
@@ -173,14 +183,14 @@ ARCHITECTURE rtl OF ENGINE IS
 					IF WIN1 = '1' AND WIN2 = '0' THEN
 						Placar1 <= Placar1(8 DOWNTO 0) & '0';
 						IF Placar1 = Placar_aux THEN
-							SM_ENGINE <= IDLE;
+							SM_ENGINE <= WINX;
 						ELSE
 							SM_ENGINE <= LINHA;
 						END IF;
 					ELSIF WIN2 = '1' AND WIN1 = '0' THEN
 						Placar2 <= Placar2(8 DOWNTO 0) & '0';
 						IF Placar2 = Placar_aux THEN
-							SM_ENGINE <= IDLE;
+							SM_ENGINE <= WINO;
 						ELSE
 							SM_ENGINE <= LINHA;
 						END IF;
@@ -204,11 +214,69 @@ ARCHITECTURE rtl OF ENGINE IS
 				STATE <= "01011111";
 				RESET <= '0';
 					IF LINHA_AUX <= 350 THEN
+						Preview_EN <= '0';
 						LINHA_AUX <= LINHA_AUX + 1;
 						SM_ENGINE <= LINHA;
 					ELSE
+						Preview_EN <= '1';
 						LINHA_AUX <= 0;
 						SM_ENGINE <= GAME_MODE;
+					END IF;
+					
+				WHEN WINX =>
+				STATE <= "01011111";
+				RESET <= '0';
+					IF LINHA_AUX <= 350 THEN
+						Preview_EN <= '0';
+						LINHA_AUX <= LINHA_AUX + 1;
+						SM_ENGINE <= WINX;
+					ELSE
+						Preview_EN <= '1';
+						LINHA_AUX <= 0;
+						SM_ENGINE <= TELA_WINX;
+					END IF;
+				
+				WHEN WINO =>
+				STATE <= "01011111";
+				RESET <= '0';
+					IF LINHA_AUX <= 350 THEN
+						Preview_EN <= '0';
+						LINHA_AUX <= LINHA_AUX + 1;
+						SM_ENGINE <= WINO;
+					ELSE
+						Preview_EN <= '1';
+						LINHA_AUX <= 0;
+						SM_ENGINE <= TELA_WINO;
+					END IF;
+
+				WHEN TELA_WINX =>
+				STATE <= "01011111";
+				RESET <= '0';
+					IF LINHA_AUX <= 700 THEN
+						Preview_EN <= '0';
+						LINHA_AUX <= LINHA_AUX + 1;
+						TELA_WINX_OUT <= '1';
+						SM_ENGINE <= TELA_WINX;
+					ELSE
+						TELA_WINX_OUT <= '0';
+						Preview_EN <= '1';
+						LINHA_AUX <= 0;
+						SM_ENGINE <= IDLE;
+					END IF;
+				
+				WHEN TELA_WINO =>
+				STATE <= "01011111";
+				RESET <= '0';
+					IF LINHA_AUX <= 700 THEN
+						Preview_EN <= '0';
+						LINHA_AUX <= LINHA_AUX + 1;
+						TELA_WINO_OUT <= '1';
+						SM_ENGINE <= TELA_WINO;
+					ELSE
+						TELA_WINO_OUT <= '0';
+						Preview_EN <= '1';
+						LINHA_AUX <= 0;
+						SM_ENGINE <= IDLE;
 					END IF;
 					
             END CASE;

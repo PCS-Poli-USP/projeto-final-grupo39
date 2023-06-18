@@ -11,6 +11,7 @@ ENTITY CONTROLE IS
 		BOT_MOVE			: IN std_logic;
 		BOT_CONFIRM		: IN std_logic;
 		SPAV_CTRL_IN 	: IN std_logic;
+		XO_IN				: IN std_logic;
 		Player_1_IN		: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 1
 		Player_2_IN		: IN std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 2
 		Player_1_Pre	: OUT std_logic_vector(8 DOWNTO 0); -- entrada da posição das jogadas do Player 1
@@ -71,11 +72,11 @@ ARCHITECTURE rtl OF CONTROLE IS
 				Counter <= 0;
 			END IF;
 			IF RESET = '0' THEN
-				IF XO_aux = '1' THEN
+				IF XO_IN = '1' THEN
 					Player_1_Pre_aux <= "000000000";
 					Player_1_Pre_aux(Counter) <= '1';
 					Player_2_Pre_aux <= "000000000";
-				ELSIF XO_aux = '0' THEN
+				ELSIF XO_IN = '0' THEN
 					Player_2_Pre_aux <= "000000000";
 					Player_2_Pre_aux(Counter) <= '1';
 					Player_1_Pre_aux <= "000000000";
@@ -96,20 +97,15 @@ ARCHITECTURE rtl OF CONTROLE IS
 			Player_2_OUT_aux <= "000000000";
 		ELSIF (rising_edge(BOT_CONFIRM_aux) AND EN = '1') THEN
 			IF Tabuleiro_aux(Counter) = '0' THEN
-				IF (SPAV_CTRL_IN = '1') THEN
-					IF XO_aux = '1' THEN
+					IF XO_IN = '1' THEN
 						Player_1_OUT_aux <= "000000000";
 						Player_1_OUT_aux <= Player_1_Pre_aux;
 						XO_aux <= NOT XO_aux;
-					ELSIF XO_aux = '0' THEN
+					ELSIF XO_IN = '0' THEN
 						Player_2_OUT_aux <= "000000000";
 						Player_2_OUT_aux <= Player_2_Pre_aux;
 						XO_aux <= NOT XO_aux;
 					END IF;
-				ELSE
-						Player_1_OUT_aux <= Player_1_Pre_aux;
-						XO_aux <= '1';
-				END IF;
 			ELSE
 				Player_1_OUT_aux <= Player_1_OUT_aux;
 				Player_2_OUT_aux <= Player_2_OUT_aux;
@@ -136,11 +132,11 @@ ARCHITECTURE rtl OF CONTROLE IS
 			ELSE
 				Player_1_aux <= Player_1_OUT_aux OR Player_1_aux;
 				Player_2_aux <= Player_2_OUT_aux OR Player_2_aux;
-				IF XO_aux = '1' THEN -- X
+				IF XO_IN = '1' THEN -- X
 					Player_1_Pre <= Player_1_Pre_aux;
 					Player_2_Pre <= "000000000";
 					XO <= '1';
-				ELSIF XO_aux = '0' THEN -- O
+				ELSIF XO_IN = '0' THEN -- O
 					Player_2_Pre <= Player_2_Pre_aux;
 					Player_1_Pre <= "000000000";
 					XO <= '0';
