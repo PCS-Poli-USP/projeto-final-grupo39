@@ -1,0 +1,2 @@
+Funcionamento:
+Gera uma matriz de pixels 640 x 480 e possui 3 botões, um para gerar uma circunferencia, outro para gerar as letras definidas em uma lista, variando seus tamanhos e um ultimo para gerar os numeros de 1 a 9, tambem testando varios tamanhos. Os códigos, usando xpos e ypos como parametros foram feitos de forma a ficarem o mais proximos possivel do codigo equivalente a ser usado em VDHL, facilitando ao maximo sua adaptação
